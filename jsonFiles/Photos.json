@@ -1,1 +1,8 @@
-[]
+[{
+    "OwnerId": "102ed540-9067-11ee-ae77-b3bd8528eca2",
+    "Title": "Example Title",
+    "Description": "This is an example description.",
+    "Image": "exampleImageAsset.jpg",
+    "Date": 1641730800,
+    "Shared": true
+  }]
