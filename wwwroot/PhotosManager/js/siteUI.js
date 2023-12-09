@@ -1,3 +1,4 @@
+
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
 let sortType = "date";
@@ -355,6 +356,7 @@ async function renderPhotos() {
 async function renderPhotosList() {
     eraseContent();
     $("#content").append("<h2> En contruction </h2>");
+    console.log(API.GetPhotos());
 }
 function renderVerify() {
     eraseContent();
