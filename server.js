@@ -9,6 +9,7 @@ import APIServer from "./APIServer.js";
 import RouteRegister from './routeRegister.js';
 
 RouteRegister.add('GET', 'accounts');
+RouteRegister.add('GET', 'photos');
 RouteRegister.add('POST', 'accounts', 'register');
 RouteRegister.add('GET', 'accounts', 'verify');
 RouteRegister.add('GET', 'accounts', 'logout');
@@ -18,7 +19,6 @@ RouteRegister.add('GET', 'accounts', 'conflict');
 RouteRegister.add('POST', 'accounts', 'block');
 RouteRegister.add('POST', 'accounts', 'promote');
 
-RouteRegister.add('GET', 'photos');
 
 
 let server = new APIServer();
