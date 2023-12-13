@@ -356,7 +356,16 @@ async function renderPhotos() {
 async function renderPhotosList() {
     eraseContent();
     $("#content").append("<h2> En contruction </h2>");
-    console.log(API.GetPhotos());
+    let photos = await API.GetPhotos();
+    $("#content").append(`<div class="photosLayout">`);
+    photos.data.forEach(photo => {
+        $("#content").append(`<div class="photoLayout">
+        <img class="photoImage" src="${photo.Image}">
+        </div>`);
+
+
+    });
+    $("#content").append(`</div>`);
 }
 function renderVerify() {
     eraseContent();
