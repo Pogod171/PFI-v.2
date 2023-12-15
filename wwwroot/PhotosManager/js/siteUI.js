@@ -123,7 +123,7 @@ function connectedUserAvatar() {
 function refreshHeader() {
     UpdateHeader(currentViewTitle, currentViewName);
 }
-function UpdateHeader(viewTitle, viewName) {
+function UpdateHeader(viewTitle, viewName) {//Rajouter un click pour ajouter photo
     currentViewTitle = viewTitle;
     currentViewName = viewName;
     $("#header").empty();
@@ -165,6 +165,9 @@ function UpdateHeader(viewTitle, viewName) {
         $("#customHeader").hide();
     }
     attachCmd();
+    $("#newPhotoCmd").on("click", function () {//////////////////////Bouton d ajout
+        renderCreatePhoto();
+    });
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Actions and command
@@ -251,6 +254,17 @@ async function deletePhoto(photoId) {
             renderError("Un problème est survenu.");
     }
 }
+
+async function createPhoto() { ///////////////////////////////////////////////////////////////////////////////////////////
+    let loggedUser = API.retrieveLoggedUser();
+    if (loggedUser) {
+        if (await API.CreatePhoto(loggedUser)) { // à vérifier pour la signature
+            renderPhotos();
+        } else
+            renderError("Un problème est survenu.");
+    }
+}
+
 async function deleteProfil() {
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
@@ -370,7 +384,7 @@ async function renderPhotosList() {
     photos.data.forEach(photo => {
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
-        if(photo.Owner.Id == API.retrieveLoggedUser().Id){
+        if (photo.Owner.Id == API.retrieveLoggedUser().Id) {
             ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" userId="${photo.Owner.Id}"></i>
             <i class="deletePhotoCmd menuIcon fa-solid fa-trash" photoId="${photo.Id}"></i>`;
             ownerPhotoIcon = `<div class="UserAvatarSmall" style="background-image: url('images/shared.png')"></div>`;
@@ -395,6 +409,12 @@ async function renderPhotosList() {
     });
     contentHtml += `</div>`;
     $("#content").append(contentHtml);
+
+    $(".editPhotoCmd").on("click", function () {
+        let photoId = $(this).attr("photoId");
+        renderConfirmDeletePhoto(photoId);
+    });
+
     $(".deletePhotoCmd").on("click", function () {
         let photoId = $(this).attr("photoId");
         renderConfirmDeletePhoto(photoId);
@@ -622,7 +642,7 @@ async function renderConfirmDeletePhoto(photoId) {
     timeout();
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
-        let photoToDelete = (await API.GetPhotos("?Id="+photoId)).data[0];
+        let photoToDelete = (await API.GetPhotos("?Id=" + photoId)).data[0];
         console.log(photoToDelete);
         if (!API.error) {
             eraseContent();
@@ -648,7 +668,7 @@ async function renderConfirmDeletePhoto(photoId) {
                 </div>
             `);
             $("#deletePhotoCmd").on("click", function () {
-                deletePhoto(photoId);  
+                deletePhoto(photoId);
             });
             $("#abortDeletePhotoCmd").on("click", renderPhotos);
         } else {
@@ -656,6 +676,76 @@ async function renderConfirmDeletePhoto(photoId) {
         }
     }
 }
+
+async function renderEditPhoto(photoId) {// a voir pour async//----------------------------------------------------------------
+    //timeout();
+    let loggedUser = API.retrieveLoggedUser();
+    if (loggedUser) {
+        let photoToEdit = (await API.GetPhotos("?Id=" + photoId)).data[0];
+        console.log(photoToEdit);
+
+    }
+}
+
+function renderCreatePhoto() {//---------------------------------------------------------------------------------------------------
+    let loggedUser = API.retrieveLoggedUser();
+    if (loggedUser) {
+        if (!API.error) {
+            eraseContent();
+            UpdateHeader("Ajout de Photo", "Création photo");////////////////Voir pour les nom Header
+            $("#newPhotoCmd").hide(); //regarder si titre est necéssaire et voir si le id de form est bon
+            $("#content").append(`
+            <br/>
+            <form class="form" id="createPhoto"'>
+                <fieldset>
+                    <legend> Information </legend>
+                    <input type="text" 
+                     class="form-control titre" 
+                     name="Titre" 
+                     id="Titre"
+                     placeholder="Titre" 
+                     required 
+                     RequireMessage = 'Veuillez donner un titre'>
+
+                    <input type="textarea"
+                     rows=5
+                     cols=70
+                     class="form-control description" 
+                     name="Description" 
+                     id="Description"
+                     placeholder="Description" 
+                     required 
+                     RequireMessage = 'Veuillez donner une description'>
+                     
+                    <input type="checkbox"
+                     class="form-control partage" 
+                     name="Partage" 
+                     id="Partage"
+                     placeholder="Partagée">
+                     
+                </fieldset>
+
+                <fieldset>
+                 <legend>Avatar</legend>
+                 <div class='imageUploader' 
+                    newImage='true' 
+                    controlId='Avatar' 
+                    imageSrc='images/no-avatar.png' 
+                    waitingImage="images/Loading_icon.gif">
+                 </div>
+            
+                </fieldset>
+                    
+        `);//////////////////Rendu ici pour continuer poour moi
+            initFormValidation();
+            initImageUploaders();
+        } else {
+            renderError("Une erreur est survenue");
+        }
+    }
+
+}
+
 function renderEditProfilForm() {
     timeout();
     let loggedUser = API.retrieveLoggedUser();
