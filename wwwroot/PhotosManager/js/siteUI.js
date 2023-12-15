@@ -242,6 +242,15 @@ async function adminDeleteAccount(userId) {
         renderError("Un problème est survenu.");
     }
 }
+async function deletePhoto(photoId) {
+    let loggedUser = API.retrieveLoggedUser();
+    if (loggedUser) {
+        if (await API.DeletePhoto(photoId)) {
+            renderPhotos();
+        } else
+            renderError("Un problème est survenu.");
+    }
+}
 async function deleteProfil() {
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
@@ -355,17 +364,41 @@ async function renderPhotos() {
 }
 async function renderPhotosList() {
     eraseContent();
-    $("#content").append("<h2> En contruction </h2>");
     let photos = await API.GetPhotos();
-    $("#content").append(`<div class="photosLayout">`);
+    let contentHtml = `<div class="photosLayout">`;
+    // $("#content").append(`<div class="photosLayout">`);
     photos.data.forEach(photo => {
-        $("#content").append(`<div class="photoLayout">
-        <img class="photoImage" src="${photo.Image}">
-        </div>`);
-
-
+        let ownerCommandsIcon = "";
+        let ownerPhotoIcon = "";
+        if(photo.Owner.Id == API.retrieveLoggedUser().Id){
+            ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" userId="${photo.Owner.Id}"></i>
+            <i class="deletePhotoCmd menuIcon fa-solid fa-trash" photoId="${photo.Id}"></i>`;
+            ownerPhotoIcon = `<div class="UserAvatarSmall" style="background-image: url('images/shared.png')"></div>`;
+        }
+        contentHtml += `<div class="photoLayout">
+        <div class="photoTitleContainer">
+            <span class="photoTitle">${photo.Title}</span>
+            ${ownerCommandsIcon}
+        </div>
+        <div class="photoImage" style="background-image:url('${photo.Image}')">
+        <div class="UserAvatarSmall" style="background-image:url('${photo.Owner.Avatar}')"></div>
+        ${ownerPhotoIcon}
+        </div>
+        <div class="photoCreationDate">
+        ${convertToFrenchDate(photo.Date)}
+        <span class="likesSummary">
+        3
+        <i class="menuIcon fa-regular fa-thumbs-up"></i>
+        </span>
+        </div>
+        </div>`;
     });
-    $("#content").append(`</div>`);
+    contentHtml += `</div>`;
+    $("#content").append(contentHtml);
+    $(".deletePhotoCmd").on("click", function () {
+        let photoId = $(this).attr("photoId");
+        renderConfirmDeletePhoto(photoId);
+    });
 }
 function renderVerify() {
     eraseContent();
@@ -580,6 +613,44 @@ async function renderConfirmDeleteAccount(userId) {
                 adminDeleteAccount(userToDelete.Id);
             });
             $("#abortDeleteAccountCmd").on("click", renderManageUsers);
+        } else {
+            renderError("Une erreur est survenue");
+        }
+    }
+}
+async function renderConfirmDeletePhoto(photoId) {
+    timeout();
+    let loggedUser = API.retrieveLoggedUser();
+    if (loggedUser) {
+        let photoToDelete = (await API.GetPhotos("?Id="+photoId)).data[0];
+        console.log(photoToDelete);
+        if (!API.error) {
+            eraseContent();
+            UpdateHeader("Retrait de photo", "confirmDeletePhoto");
+            $("#newPhotoCmd").hide();
+            $("#content").append(`
+                <div class="content loginForm">
+                    <br>
+                    <div class="form UserRow ">
+                        <h4> Voulez-vous vraiment effacer cette photos</h4>
+                        <div class="photoLayout">
+                            <div class="photoTitleContainer">
+                                <span class="photoTitle">${photoToDelete.Title}</span>
+                            </div>
+                            <div class="photoImage" style="background-image:url('${photoToDelete.Image}')">
+                            </div>
+                        </div>           
+                    <div class="form">
+                        <button class="form-control btn-danger" id="deletePhotoCmd">Effacer ma photo</button>
+                        <br>
+                        <button class="form-control btn-secondary" id="abortDeletePhotoCmd">Annuler</button>
+                    </div>
+                </div>
+            `);
+            $("#deletePhotoCmd").on("click", function () {
+                deletePhoto(photoId);  
+            });
+            $("#abortDeletePhotoCmd").on("click", renderPhotos);
         } else {
             renderError("Une erreur est survenue");
         }
