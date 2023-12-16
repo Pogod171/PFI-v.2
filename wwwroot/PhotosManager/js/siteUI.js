@@ -418,13 +418,8 @@ async function renderPhotosList(filterName = "") {
     photos.forEach(photo => {
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
-<<<<<<< Updated upstream
-        if (photo.Owner.Id == API.retrieveLoggedUser().Id) {
-            ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" userId="${photo.Owner.Id}"></i>
-=======
         if(photo.Owner.Id == API.retrieveLoggedUser().Id){
-            ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" photoId="${photo.Owner.Id}"></i>
->>>>>>> Stashed changes
+            ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" photoId="${photo.Id}"></i>
             <i class="deletePhotoCmd menuIcon fa-solid fa-trash" photoId="${photo.Id}"></i>`;
             ownerPhotoIcon = `<div class="UserAvatarSmall" style="background-image: url('images/shared.png')"></div>`;
         }
