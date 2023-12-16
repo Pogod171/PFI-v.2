@@ -255,10 +255,12 @@ async function deletePhoto(photoId) {
     }
 }
 
-async function createPhoto() { ///////////////////////////////////////////////////////////////////////////////////////////
+async function createPhoto(photo) { ///////////////////////////////////////////////////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
+    console.log(photo);
     if (loggedUser) {
-        if (await API.CreatePhoto(loggedUser)) { // à vérifier pour la signature
+        if (await API.CreatePhoto(photo)) { 
+            console.log("Photo enregistrer");
             renderPhotos();
         } else
             renderError("Un problème est survenu.");
@@ -693,7 +695,7 @@ function renderCreatePhoto() {//------------------------------------------------
         if (!API.error) {
             eraseContent();
             UpdateHeader("Ajout de Photo", "Création photo");////////////////Voir pour les nom Header
-            $("#newPhotoCmd").hide(); //regarder si titre est necéssaire et voir si le id de form est bon
+            $("#newPhotoCmd").hide(); //regarder si titre est necéssaire et voir si le id de form est bon AUssi,le placeHolde de description ne fonctionne pas
             $("#content").append(`
             <br/>
             <form class="form" id="createPhoto"'>
@@ -707,21 +709,20 @@ function renderCreatePhoto() {//------------------------------------------------
                      required 
                      RequireMessage = 'Veuillez donner un titre'>
 
-                    <input type="textarea"
-                     rows=5
-                     cols=70
+                    <textarea
                      class="form-control description" 
                      name="Description" 
                      id="Description"
                      placeholder="Description" 
                      required 
-                     RequireMessage = 'Veuillez donner une description'>
-                     
+                     RequireMessage = 'Veuillez donner une description'> 
+                    </textarea>
+                    
+                    <label for="Partage"> Partagée </label>
                     <input type="checkbox"
-                     class="form-control partage" 
+                      
                      name="Partage" 
-                     id="Partage"
-                     placeholder="Partagée">
+                     id="Partage">
                      
                 </fieldset>
 
@@ -730,15 +731,27 @@ function renderCreatePhoto() {//------------------------------------------------
                  <div class='imageUploader' 
                     newImage='true' 
                     controlId='Avatar' 
-                    imageSrc='images/no-avatar.png' 
+                    imageSrc='images/PhotoCloudLogo.png' 
                     waitingImage="images/Loading_icon.gif">
-                 </div>
-            
+                 </div>                 
                 </fieldset>
-                    
+                <input type='submit' name='submit' id='savePhoto' value="Enregistrer" class="form-control btn-primary">
+            </form>
+            <div class="cancel">
+                <button class="form-control btn-secondary" id="abortCreatePhoto">Annuler</button>
+            </div>      
         `);//////////////////Rendu ici pour continuer poour moi
             initFormValidation();
             initImageUploaders();
+            $('#abortCreatePhoto').on('click', renderPhotos);
+            $('createPhoto').on("submit", function (event) {
+              let photo = getFormData($('#createPhoto'));
+              event.preventDefault();
+              console.log("Bouh");
+              showWaitingGif();
+              createPhoto(photo);
+        });
+
         } else {
             renderError("Une erreur est survenue");
         }
