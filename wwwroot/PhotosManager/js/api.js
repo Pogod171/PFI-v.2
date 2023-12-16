@@ -246,10 +246,10 @@ class API {
         });
     }
     static CreatePhoto(data) {
-        API.initHttpState();
+        API.initHttpState(); // a voir
         return new Promise(resolve => {
             $.ajax({
-                url: serverHost + photos_API,
+                url: serverHost + photos_API + "/register",   
                 type: 'POST',
                 headers: API.getBearerAuthorizationToken(),
                 contentType: 'application/json',

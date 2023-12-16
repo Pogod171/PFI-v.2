@@ -292,7 +292,7 @@ async function createPhoto(photo) { ////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
     console.log(photo);
     if (loggedUser) {
-        if (await API.CreatePhoto(photo)) { 
+        if (await API.CreatePhoto(photo)) { //A voir pour API.
             console.log("Photo enregistrer");
             renderPhotos();
         } else
@@ -763,7 +763,7 @@ function renderCreatePhoto() {//------------------------------------------------
             $("#newPhotoCmd").hide(); //regarder si titre est necéssaire et voir si le id de form est bon AUssi,le placeHolde de description ne fonctionne pas
             $("#content").append(`
             <br/>
-            <form class="form" id="createPhoto"'>
+            <form class="form" id="createPhoto">
             <input type="hidden" id="idUser" name="idUser" value="${loggedUser.Id}"/>
                 <fieldset>
                     <legend> Information </legend>
@@ -810,10 +810,10 @@ function renderCreatePhoto() {//------------------------------------------------
             initFormValidation();
             initImageUploaders();
             $('#abortCreatePhoto').on('click', renderPhotos);
-            $('createPhoto').on("submit", function (event) {
+            $('#createPhoto').on("submit", function (event) {
               let photo = getFormData($('#createPhoto'));
               event.preventDefault();
-              console.log("Bouh");
+              //console.log(photo);
               showWaitingGif();
               createPhoto(photo);
         });

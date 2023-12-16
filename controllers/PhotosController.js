@@ -24,7 +24,7 @@ export default
                 this.HttpContext.response.unAuthorized("Unauthorized access");
         }
     }
-    create(photo) { //Reste quelques test à faire
+    register(photo) { //Reste quelques test à faire
         if (this.repository != null) {
             photo.Date = utilities.nowInSeconds();//à voir pour mettre la date
             let newPhoto = this.repository.add(photo);
