@@ -764,6 +764,7 @@ function renderCreatePhoto() {//------------------------------------------------
             $("#content").append(`
             <br/>
             <form class="form" id="createPhoto"'>
+            <input type="hidden" id="idUser" name="idUser" value="${loggedUser.Id}"/>
                 <fieldset>
                     <legend> Information </legend>
                     <input type="text" 

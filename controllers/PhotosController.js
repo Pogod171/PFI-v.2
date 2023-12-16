@@ -24,6 +24,26 @@ export default
                 this.HttpContext.response.unAuthorized("Unauthorized access");
         }
     }
+    create(photo) { //Reste quelques test à faire
+        if (this.repository != null) {
+            photo.Date = utilities.nowInSeconds();//à voir pour mettre la date
+            let newPhoto = this.repository.add(photo);
+            if (this.repository.model.state.isValid) {
+                this.HttpContext.response.created(newPhoto);
+            } else {
+                if (this.repository.model.state.inConflict)
+                    this.HttpContext.response.conflict(this.repository.model.state.errors);
+                else
+                    this.HttpContext.response.badRequest(this.repository.model.state.errors);
+            }
+        } else
+            this.HttpContext.response.notImplemented();
+    }
+
+    modify(id){
+        //Edit photo
+    }
+
     remove(id) { // warning! this is not an API endpoint
         if (Authorizations.writeGranted(this.HttpContext, Authorizations.user())) {
             super.remove(id);
