@@ -788,8 +788,8 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
                  id="Description"
                  placeholder="Description" 
                  required 
-                 RequireMessage = 'Veuillez donner une description'
-                 value="${photoToEdit.Description}"> 
+                 RequireMessage = 'Veuillez donner une description'> 
+                 ${photoToEdit.Description}
                 </textarea>
                 
                 <label for="Partage"> Partagée </label>
