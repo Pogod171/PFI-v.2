@@ -245,29 +245,29 @@ class API {
             });
         });
     }
-    static CreatePhoto(data) {
-        API.initHttpState(); // a voir
+    static CreatePhoto(photo) {
+        API.initHttpState(); // a voir ///////SOurce du probleme ici
         return new Promise(resolve => {
             $.ajax({
                 url: serverHost + photos_API + "/register",   
                 type: 'POST',
                 headers: API.getBearerAuthorizationToken(),
                 contentType: 'application/json',
-                data: JSON.stringify(data),
+                data: JSON.stringify(photo),
                 success: data => { resolve(data) },
                 error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
             });
         });
     }
-    static UpdatePhoto(data) {
+    static UpdatePhoto(photo) {
         API.initHttpState();
         return new Promise(resolve => {
             $.ajax({
-                url: serverHost + photos_API + "/" + data.Id,
+                url: serverHost + photos_API + "/" + photo.Id,
                 type: 'PUT',
                 headers: API.getBearerAuthorizationToken(),
                 contentType: 'application/json',
-                data: JSON.stringify(data),
+                data: JSON.stringify(photo),
                 success: () => { resolve(true) },
                 error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
             });

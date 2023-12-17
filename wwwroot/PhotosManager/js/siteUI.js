@@ -300,11 +300,11 @@ async function createPhoto(photo) { ////////////////////////////////////////////
     }
 }
 
-async function editPhoto(photo) { //Peut être la photo en entier dans la signature ou le id?
+async function editPhoto(photo) { 
     let loggedUser = API.retrieveLoggedUser();
     console.log(photo);
     if (loggedUser) {
-        if (await API.modify(photo.id)) { //A voir pour API.
+        if (await API.UpdatePhoto(photo)) { //A voir pour API.
             console.log("Photo modifié");
             renderPhotos();
         } else
@@ -460,6 +460,7 @@ async function renderPhotosList(filterName = "") {
 
     $(".editPhotoCmd").on("click", function () {/////////////////////////////////////////////////////////////////////////////
         let photoId = $(this).attr("photoId");
+        console.log(photoId);
         renderEditPhoto(photoId);
     });
 
@@ -761,7 +762,7 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
         if (!API.error) {
-            let photoToEdit = (await API.GetPhotos("?Id=" + photoId)).data[0];//avoir la photo lié à son id
+            let photoToEdit = (await API.GetPhotosById(photoId));//avoir la photo lié à son id
             let isChecked = photoToEdit.Shared
             console.log(photoToEdit);
             eraseContent();
@@ -801,15 +802,15 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
             </fieldset>
 
             <fieldset>
-             <legend>Avatar</legend>
+             <legend>Image</legend>
              <div class='imageUploader' 
-                newImage='true' 
-                controlId='Avatar' 
+                newImage='false' 
+                controlId='Image' 
                 imageSrc='${photoToEdit.Image}' 
                 waitingImage="images/Loading_icon.gif">
              </div>                 
             </fieldset>
-            <input type='submit' name='submit' id='savePhoto' value="Enregistrer" class="form-control btn-primary">
+            <input type='submit' name='submit' id='editPhoto' value="Enregistrer" class="form-control btn-primary">
         </form>
         <div class="cancel">
             <button class="form-control btn-secondary" id="abortEditPhoto">Annuler</button>
@@ -821,7 +822,7 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
             $('#editPhoto').on("submit", function (event) {
                 let photo = getFormData($('#editPhoto'));
                 event.preventDefault();
-                console.log(photo);
+                console.log(photo.Image);
                 showWaitingGif();
                 editPhoto(photo);
             });
@@ -893,12 +894,10 @@ function renderCreatePhoto() {//------------------------------------------------
                 showWaitingGif();
                 createPhoto(photo);
             });
-
         } else {
             renderError("Une erreur est survenue");
         }
     }
-
 }
 
 function renderEditProfilForm() {
