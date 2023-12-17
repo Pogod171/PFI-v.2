@@ -7,8 +7,7 @@ export default class PhotoLike extends Model {
     {
         super();
         this.addField('OwnerId', 'string');
-        this.addField('Image', 'asset');
-        this.addField('IsLiked','boolean');
+        this.addField('ImageId', 'string');
 
         // this.setKey("Title");
     }
