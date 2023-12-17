@@ -68,16 +68,16 @@ function attachCmd() {
     $('#logoutCmd').on('click', logout);
     $('#listPhotosCmd').on('click', renderPhotos);
     $('#listPhotosMenuCmd').on('click', renderPhotos);
-    $('#sortByDateCmd').on('click', function(){
+    $('#sortByDateCmd').on('click', function () {
         renderPhotos("Date");
     });
-    $('#sortByOwnersCmd').on('click', function(){
+    $('#sortByOwnersCmd').on('click', function () {
         renderPhotos("Creator");
     });
-    $('#sortByLikesCmd').on('click', function(){
+    $('#sortByLikesCmd').on('click', function () {
         renderPhotos("Likes");
     });
-    $('#ownerOnlyCmd').on('click', function(){
+    $('#ownerOnlyCmd').on('click', function () {
         renderPhotos("Owned");
     });
     $('#editProfilMenuCmd').on('click', renderEditProfilForm);
@@ -300,6 +300,18 @@ async function createPhoto(photo) { ////////////////////////////////////////////
     }
 }
 
+async function editPhoto(photo) { //Peut être la photo en entier dans la signature ou le id?
+    let loggedUser = API.retrieveLoggedUser();
+    console.log(photo);
+    if (loggedUser) {
+        if (await API.modify(photo.id)) { //A voir pour API.
+            console.log("Photo modifié");
+            renderPhotos();
+        } else
+            renderError("Un problème est survenu.");
+    }
+}
+
 async function deleteProfil() {
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
@@ -420,7 +432,7 @@ async function renderPhotosList(filterName = "") {
     photos.forEach(photo => {
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
-        if(photo.Owner.Id == API.retrieveLoggedUser().Id){
+        if (photo.Owner.Id == API.retrieveLoggedUser().Id) {
             ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" photoId="${photo.Id}"></i>
             <i class="deletePhotoCmd menuIcon fa-solid fa-trash" photoId="${photo.Id}"></i>`;
             ownerPhotoIcon = `<div class="UserAvatarSmall" style="background-image: url('images/shared.png')"></div>`;
@@ -446,9 +458,9 @@ async function renderPhotosList(filterName = "") {
     contentHtml += `</div>`;
     $("#content").append(contentHtml);
 
-    $(".editPhotoCmd").on("click", function () {
+    $(".editPhotoCmd").on("click", function () {/////////////////////////////////////////////////////////////////////////////
         let photoId = $(this).attr("photoId");
-        renderConfirmDeletePhoto(photoId);
+        renderEditPhoto(photoId);
     });
 
     $(".deletePhotoCmd").on("click", function () {
@@ -461,10 +473,10 @@ async function renderPhotosList(filterName = "") {
     });
 }
 
-async function renderDetailPage(photoId){
+async function renderDetailPage(photoId) {
     eraseContent();
     timeout();
-    let photo = (await API.GetPhotos("?Id="+photoId)).data[0];
+    let photo = (await API.GetPhotos("?Id=" + photoId)).data[0];
     console.log(photo);
     $("#content").append(`<div class="photoDetailsOwner">
     <div class="UserAvatarSmall" style="background-image:url('${photo.Owner.Avatar}')"></div>
@@ -748,8 +760,72 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
     //timeout();
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
-        let photoToEdit = (await API.GetPhotos("?Id=" + photoId)).data[0];
-        console.log(photoToEdit);
+        if (!API.error) {
+            let photoToEdit = (await API.GetPhotos("?Id=" + photoId)).data[0];//avoir la photo lié à son id
+            let isChecked = photoToEdit.Shared
+            console.log(photoToEdit);
+            eraseContent();
+            UpdateHeader("Modification de Photo", "Modification photo");
+            $("#newPhotoCmd").hide();
+            $("#content").append(`
+        <br/>
+        <form class="form" id="editPhoto">
+        <input type="hidden" id="idUser" name="idUser" value="${photoToEdit.Id}"/>
+            <fieldset>
+                <legend> Information </legend>
+                <input type="text" 
+                 class="form-control titre" 
+                 name="Titre" 
+                 id="Titre"
+                 placeholder="Titre" 
+                 required 
+                 RequireMessage = 'Veuillez donner un titre'
+                 value="${photoToEdit.Title}">
+
+                <textarea
+                 class="form-control description" 
+                 name="Description" 
+                 id="Description"
+                 placeholder="Description" 
+                 required 
+                 RequireMessage = 'Veuillez donner une description'
+                 value="${photoToEdit.Description}"> 
+                </textarea>
+                
+                <label for="Partage"> Partagée </label>
+                <input type="checkbox"
+                ${isChecked ? "checked" : ""}
+                 name="Partage" 
+                 id="Partage">
+                 
+            </fieldset>
+
+            <fieldset>
+             <legend>Avatar</legend>
+             <div class='imageUploader' 
+                newImage='true' 
+                controlId='Avatar' 
+                imageSrc='${photoToEdit.Image}' 
+                waitingImage="images/Loading_icon.gif">
+             </div>                 
+            </fieldset>
+            <input type='submit' name='submit' id='savePhoto' value="Enregistrer" class="form-control btn-primary">
+        </form>
+        <div class="cancel">
+            <button class="form-control btn-secondary" id="abortEditPhoto">Annuler</button>
+        </div>      
+    `);
+            initFormValidation();
+            initImageUploaders();
+            $('#abortEditPhoto').on('click', renderPhotos);
+            $('#editPhoto').on("submit", function (event) {
+                let photo = getFormData($('#editPhoto'));
+                event.preventDefault();
+                console.log(photo);
+                showWaitingGif();
+                editPhoto(photo);
+            });
+        }
 
     }
 }
@@ -806,17 +882,17 @@ function renderCreatePhoto() {//------------------------------------------------
             <div class="cancel">
                 <button class="form-control btn-secondary" id="abortCreatePhoto">Annuler</button>
             </div>      
-        `);//////////////////Rendu ici pour continuer poour moi
+        `);//////////////////Rendu ici 
             initFormValidation();
             initImageUploaders();
             $('#abortCreatePhoto').on('click', renderPhotos);
             $('#createPhoto').on("submit", function (event) {
-              let photo = getFormData($('#createPhoto'));
-              event.preventDefault();
-              //console.log(photo);
-              showWaitingGif();
-              createPhoto(photo);
-        });
+                let photo = getFormData($('#createPhoto'));
+                event.preventDefault();
+                //console.log(photo);
+                showWaitingGif();
+                createPhoto(photo);
+            });
 
         } else {
             renderError("Une erreur est survenue");
@@ -1008,19 +1084,19 @@ function getFormData($form) {
     return jsonObject;
 }
 
-function getPhotos(photos, cmdName = ""){
+function getPhotos(photos, cmdName = "") {
     let loggedUser = API.retrieveLoggedUser();
-    switch (cmdName){
-        case "Date" :
+    switch (cmdName) {
+        case "Date":
             console.log("Par date");
-            photos.sort(function(a, b) {
+            photos.sort(function (a, b) {
                 return a.Date - b.Date;
             });
-            
+
             break;
-        case "Creator" : 
+        case "Creator":
             console.log("Par createur");
-            photos.sort(function(a, b) {
+            photos.sort(function (a, b) {
                 var ownerA = a.OwnerName.toUpperCase();
                 var ownerB = b.OwnerName.toUpperCase();
                 if (ownerA < ownerB) {
@@ -1032,16 +1108,16 @@ function getPhotos(photos, cmdName = ""){
                 return 0;
             });
             break;
-        case "Likes" : 
+        case "Likes":
             console.log("Par likes");
             break;
-        case "Owned" : 
+        case "Owned":
             console.log("Voir tes photos");
-            photos.filter(function(item) {
+            photos.filter(function (item) {
                 return item.OwnerId == loggedUser.Id;
             });
             break;
-        default :
+        default:
             break;
     }
     return photos;

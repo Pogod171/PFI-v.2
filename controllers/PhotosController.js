@@ -40,8 +40,25 @@ export default
             this.HttpContext.response.notImplemented();
     }
 
-    modify(id){
-        //Edit photo
+    modify(photo){ // photo ou id?
+            if (this.repository != null) {
+                photo.Date = utilities.nowInSeconds();//Modifier date création?
+                let photoId = this.repository.findByField("Id", user.Id);
+                if (photoId != null) {
+                    let updatedPhoto = this.repository.update(photo.Id, photo);
+                    if (this.repository.model.state.isValid) {
+                        this.HttpContext.response.updated(updatedPhoto);
+                    }
+                    else {
+                        if (this.repository.model.state.inConflict)
+                            this.HttpContext.response.conflict(this.repository.model.state.errors);
+                        else
+                            this.HttpContext.response.badRequest(this.repository.model.state.errors);
+                    }
+                } else
+                    this.HttpContext.response.notFound();
+            } else
+                this.HttpContext.response.notImplemented();       
     }
 
     remove(id) { // warning! this is not an API endpoint
