@@ -856,9 +856,9 @@ async function renderEditPhoto(photoId) {
                     photo.Shared = true;
                  else 
                     photo.Shared = false;
+                photo.Date = photoToEdit.Date;
                 event.preventDefault();
-                console.log(photo.Id, "1");
-                console.log(photo.Shared, "2");
+                console.log(photo,"1");
                 console.log(photo.Image);
                 showWaitingGif();
                 editPhoto(photo);
