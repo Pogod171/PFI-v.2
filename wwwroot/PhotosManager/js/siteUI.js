@@ -327,14 +327,14 @@ async function deleteProfil() {
 
 function createLike(idPhoto){
     let loggedUser = API.retrieveLoggedUser();
-    let likeUser = [loggedUser.Id, idPhoto];
+    let likeUser = {"OwnerId" : loggedUser.Id, "ImageId" : idPhoto};
     if(loggedUser){
         CreateLike(likeUser);
     }
 }
 
 function removeLike(idPhoto){
-    
+  console.log("Pas de like");
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

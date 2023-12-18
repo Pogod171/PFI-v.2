@@ -10,7 +10,7 @@ export default class PhotoLike extends Model {
         this.addField('OwnerId', 'string');
         this.addField('ImageId', 'string');
 
-        // this.setKey("Title");
+        this.setKey("OwnerId");
     }
 
     bindExtraData(instance) {
