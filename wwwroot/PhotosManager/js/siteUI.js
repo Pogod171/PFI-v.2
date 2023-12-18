@@ -291,8 +291,8 @@ async function deletePhoto(photoId) {
 
 async function createPhoto(photo) { ///////////////////////////////////////////////////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
+    photo.Date = 0;
     console.log(photo);
-   // photo.Date = utilities.nowInSeconds();
     if (loggedUser) {
         if (await API.CreatePhoto(photo)) { //A voir pour API.
             console.log("Photo enregistrer");
