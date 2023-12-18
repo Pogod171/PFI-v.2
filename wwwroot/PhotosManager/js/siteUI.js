@@ -449,13 +449,15 @@ async function renderPhotosList(filterName = "") {
     let likes = await API.GetPhotoLikes();
     let contentHtml = `<div class="photosLayout">`;
     photos = getPhotos(photos.data, filterName);
-    console.log(photos);
     photos.forEach(photo => {
         let photoLikes = likes.data.filter(function (item) {
             return item.ImageId == photo.Id;
         });
-        console.log(photoLikes);
-        console.log(photoLikes);
+        photo.LikeCount = photoLikes.length;
+    });
+    console.log(photos);
+    photos.forEach(photo => {
+        
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
         if (photo.Owner.Id == API.retrieveLoggedUser().Id || API.retrieveLoggedUser().isAdmin) {
@@ -477,7 +479,7 @@ async function renderPhotosList(filterName = "") {
         <div class="photoCreationDate">
         ${convertToFrenchDate(photo.Date)}
         <span class="likesSummary" photoId=${photo.Id}>
-        ${photoLikes.length}
+        ${photo.LikeCount}
         <i class="menuIcon fa-regular fa-thumbs-up"></i>
         </span>
         </div>
@@ -517,6 +519,7 @@ async function renderDetailPage(photoId) {
     eraseContent();
     timeout();
     let photo = (await API.GetPhotos("?Id=" + photoId)).data[0];
+    let likes = (await API.GetPhotoLikes("?ImageId="+photoId)).data[0];
     console.log(photo);
     $("#content").append(`<div class="photoDetailsOwner">
     <div class="UserAvatarSmall" style="background-image:url('${photo.Owner.Avatar}')"></div>
@@ -530,7 +533,7 @@ async function renderDetailPage(photoId) {
     <div class="photoDetailsCreationDate">
         ${convertToFrenchDate(photo.Date)}
         <span class="likesSummary">
-        3
+        ${likes.length}
         <i class="menuIcon fa-regular fa-thumbs-up"></i>
         </span>
     </div>
@@ -1162,6 +1165,9 @@ function getPhotos(photos, cmdName = "Date") {
             break;
         case "Likes":
             console.log("Par likes");
+            photos = photos.sort(function (a, b) {
+                return b.LikeCount - a.LikeCount;
+            });
             break;
         case "Owned":
             console.log("Voir tes photos");
