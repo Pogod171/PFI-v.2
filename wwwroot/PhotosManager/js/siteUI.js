@@ -252,7 +252,7 @@ async function verify(verifyCode) {
         renderError("Désolé, votre code de vérification n'est pas valide...");
     }
 }
-async function editProfil(profil) {
+async function editProfil(profil) {/////////////////////////////////////////////////
     if (await API.modifyUserProfil(profil)) {
         let loggedUser = API.retrieveLoggedUser();
         if (loggedUser) {
@@ -487,7 +487,7 @@ async function renderPhotosList(filterName = "") {
 
     $(".editPhotoCmd").on("click", function () {/////////////////////////////////////////////////////////////////////////////
         let photoId = $(this).attr("photoId");
-        console.log(photoId);
+        //console.log(photoId);
         renderEditPhoto(photoId);
     });
 
@@ -784,13 +784,15 @@ async function renderConfirmDeletePhoto(photoId) {
     }
 }
 
-async function renderEditPhoto(photoId) {// a voir pour async//----------------------------------------------------------------
+async function renderEditPhoto(photoId) {
     //timeout();
+    //console.log(photoId);
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
         if (!API.error) {
-            let photoToEdit = (await API.GetPhotosById(photoId));//regarder aussi si c'est le owner id
-            let isChecked = photoToEdit.Shared
+            let photoToEdit = (await API.GetPhotosById(photoId));
+            let isChecked = photoToEdit.Shared;
+            //photoToEdit.OwnerId = loggedUser.Id;
             console.log(photoToEdit);
             eraseContent();
             UpdateHeader("Modification de Photo", "Modification photo");
@@ -798,7 +800,7 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
             $("#content").append(`
         <br/>
         <form class="form" id="editPhoto">
-        <input type="hidden" id="idUser" name="idUser" value="${photoToEdit.Id}"/>
+        
             <fieldset>
                 <legend> Information </legend>
                 <input type="text" 
@@ -823,8 +825,8 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
                 <label for="Partage"> Partagée </label>
                 <input type="checkbox"
                 ${isChecked ? "checked" : ""}
-                 name="Partage" 
-                 id="Partage">
+                 name="Shared" 
+                 id="Shared">
                  
             </fieldset>
 
@@ -848,6 +850,10 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
             $('#abortEditPhoto').on('click', renderPhotos);
             $('#editPhoto').on("submit", function (event) {
                 let photo = getFormData($('#editPhoto'));
+                if(photo.Shared == 'on') 
+                    photo.Shared = true;
+                 else 
+                    photo.Shared = false;
                 event.preventDefault();
                 console.log(photo.Image);
                 showWaitingGif();
@@ -863,8 +869,8 @@ function renderCreatePhoto() {//------------------------------------------------
     if (loggedUser) {
         if (!API.error) {
             eraseContent();
-            UpdateHeader("Ajout de Photo", "Création photo");////////////////Voir pour les nom Header
-            $("#newPhotoCmd").hide(); //regarder si titre est necéssaire et voir si le id de form est bon AUssi,le placeHolde de description ne fonctionne pas
+            UpdateHeader("Ajout de Photo", "Création photo");
+            $("#newPhotoCmd").hide(); 
             $("#content").append(`
             <br/>
             <form class="form" id="createPhoto">
@@ -911,7 +917,7 @@ function renderCreatePhoto() {//------------------------------------------------
             <div class="cancel">
                 <button class="form-control btn-secondary" id="abortCreatePhoto">Annuler</button>
             </div>      
-        `);//////////////////Rendu ici Voir pour rendre la date
+        `);
             initFormValidation();
             initImageUploaders();
 
@@ -934,7 +940,7 @@ function renderCreatePhoto() {//------------------------------------------------
     }
 }
 
-function renderEditProfilForm() {
+function renderEditProfilForm() {////////////////////////////////////////////////////////////////////////////////
     timeout();
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {

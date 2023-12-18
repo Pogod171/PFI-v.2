@@ -27,7 +27,7 @@ export default
     }
     register(photo) { //Reste quelques test à faire
         if (this.repository != null) {
-            photo.Date = utilities.nowInSeconds();//à voir pour mettre la date
+            //photo.Date = utilities.nowInSeconds();//à voir pour mettre la date
             let newPhoto = this.repository.add(photo);
             console.log(newPhoto);
             if (this.repository.model.state.isValid) {
@@ -44,7 +44,7 @@ export default
 
     modify(photo){ // photo ou id?
             if (this.repository != null) {
-                photo.Date = utilities.nowInSeconds();//Modifier date création?
+                //photo.Date = utilities.nowInSeconds();//Modifier date création?
                 let photoId = this.repository.findByField("Id", user.Id);
                 if (photoId != null) {
                     let updatedPhoto = this.repository.update(photo.Id, photo);

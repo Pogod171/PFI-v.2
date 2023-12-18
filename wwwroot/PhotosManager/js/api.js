@@ -263,12 +263,14 @@ class API {
         API.initHttpState();
         return new Promise(resolve => {
             $.ajax({
-                url: serverHost + photos_API + "/" + photo.Id,
+                url: serverHost + photos_API + "/modify/" + photo.Id,
                 type: 'PUT',
                 headers: API.getBearerAuthorizationToken(),
                 contentType: 'application/json',
                 data: JSON.stringify(photo),
-                success: () => { resolve(true) },
+                success: (photo) => {
+                    resolve(photo);
+                },
                 error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
             });
         });
