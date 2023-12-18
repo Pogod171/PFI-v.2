@@ -10,4 +10,20 @@ export default
     constructor(HttpContext) {
         super(HttpContext, new Repository(new PhotoLikeModel()), Authorizations.user());
     }
+
+    registerLike(like){
+        if (this.repository != null) {
+            let newLike = this.repository.add(like);
+            console.log(newLike);
+            if (this.repository.model.state.isValid) {
+                this.HttpContext.response.created(newLike);
+            } else {
+                if(this.repository.model.state.inConflict)
+                    this.HttpContext.response.conflict(this.repository.model.state.errors);
+                else
+                    this.HttpContext.response.badRequest(this.repository.model.state.errors);
+            }
+        } else
+            this.HttpContext.response.notImplemented();
+    }
 }
