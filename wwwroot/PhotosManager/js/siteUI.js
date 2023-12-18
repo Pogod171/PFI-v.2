@@ -1153,6 +1153,11 @@ function getPhotos(photos, cmdName = "") {
         default:
             break;
     }
+    if(cmdName != "Owned"){
+        photos = photos.filter(function(photo) {
+            return photo.Shared == true; 
+        });
+    }
     return photos;
 
 }
