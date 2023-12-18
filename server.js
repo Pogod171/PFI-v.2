@@ -10,6 +10,7 @@ import RouteRegister from './routeRegister.js';
 
 RouteRegister.add('GET', 'accounts');
 RouteRegister.add('GET', 'photos');
+RouteRegister.add('GET', 'photoLikes');
 RouteRegister.add('POST', 'accounts', 'register');
 RouteRegister.add('POST', 'photos', 'register');
 RouteRegister.add('GET', 'accounts', 'verify');
