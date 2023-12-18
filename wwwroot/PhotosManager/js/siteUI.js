@@ -329,10 +329,11 @@ async function deleteProfil() {
     }
 }
 
-function createLike(idPhoto){
+function createLike(idPhoto){////////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
     let likeUser = {"OwnerId" : loggedUser.Id, "ImageId" : idPhoto};
     if(loggedUser){
+        //console.log("Like créer 2");
         CreateLike(likeUser);
     }
 }
@@ -481,10 +482,11 @@ async function renderPhotosList(filterName = "") {
 
     $("#likes").on("click", function() {
         let photoId = $(this).attr("photoId");
+        console.log("Like créer 1");
         createLike(photoId);
     });
 
-    $("likes").on("onmousemove", function(){
+    $("#likes").on("onmousemove", function(){
         //Afficher les nom de ceux qui ont liker
     });
 

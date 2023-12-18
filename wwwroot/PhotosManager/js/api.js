@@ -290,15 +290,15 @@ class API {
         });
     }
 
-    static CreateLike(idOwner, idPhoto){
+    static CreateLike(like){
         return new Promise(resolve => {
             $.ajax({
-                url: serverHost + photoLikes_API + "/register",   //voir pour le controller
+                url: serverHost + photoLikes_API + "/registerLike",   //voir pour le controller
                 type: 'POST',
                 headers: API.getBearerAuthorizationToken(),
                 contentType: 'application/json',
-                data: JSON.stringify(photo),
-                success: data => { resolve(data) },
+                data: JSON.stringify(like),
+                success: like => { resolve(like) },
                 error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
             });
         });
