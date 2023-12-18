@@ -334,7 +334,7 @@ function createLike(idPhoto){////////////////////////////////////////////////
     let likeUser = {"OwnerId" : loggedUser.Id, "ImageId" : idPhoto};
     if(loggedUser){
         //console.log("Like créer 2");
-        CreateLike(likeUser);
+        API.CreateLike(likeUser);
     }
 }
 
@@ -474,7 +474,7 @@ async function renderPhotosList(filterName = "") {
         ${convertToFrenchDate(photo.Date)}
         <span class="likesSummary">
         3
-        <i id="likes" class="menuIcon fa-regular fa-thumbs-up"></i>
+        <i class="menuIcon fa-regular fa-thumbs-up" photoId=${photo.Id}></i>
         </span>
         </div>
         </div>`;
@@ -482,19 +482,20 @@ async function renderPhotosList(filterName = "") {
     contentHtml += `</div>`;
     $("#content").append(contentHtml);
 
-    $("#likes").on("click", function() {
+    $(".likesSummary").on("click", function() {
         let photoId = $(this).attr("photoId");
         console.log("Like créer 1");
+        console.log(photoId);
         createLike(photoId);
     });
 
-    $("#likes").on("onmousemove", function(){
+    $(".likesSummary").on("onmousemove", function(){
         //Afficher les nom de ceux qui ont liker
     });
 
     $(".editPhotoCmd").on("click", function () {/////////////////////////////////////////////////////////////////////////////
         let photoId = $(this).attr("photoId");
-        //console.log(photoId);
+        console.log(photoId);
         renderEditPhoto(photoId);
     });
 
