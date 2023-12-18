@@ -1088,14 +1088,14 @@ function getPhotos(photos, cmdName = "") {
     switch (cmdName) {
         case "Date":
             console.log("Par date");
-            photos.sort(function (a, b) {
+            photos = photos.sort(function (a, b) {
                 return a.Date - b.Date;
             });
 
             break;
         case "Creator":
             console.log("Par createur");
-            photos.sort(function (a, b) {
+            photos = photos.sort(function (a, b) {
                 var ownerA = a.OwnerName.toUpperCase();
                 var ownerB = b.OwnerName.toUpperCase();
                 if (ownerA < ownerB) {
@@ -1112,7 +1112,7 @@ function getPhotos(photos, cmdName = "") {
             break;
         case "Owned":
             console.log("Voir tes photos");
-            photos.filter(function (item) {
+            photos = photos.filter(function (item) {
                 return item.OwnerId == loggedUser.Id;
             });
             break;
