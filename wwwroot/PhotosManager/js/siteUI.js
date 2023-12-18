@@ -472,9 +472,9 @@ async function renderPhotosList(filterName = "") {
         </div>
         <div class="photoCreationDate">
         ${convertToFrenchDate(photo.Date)}
-        <span class="likesSummary">
+        <span class="likesSummary" photoId=${photo.Id}>
         3
-        <i class="menuIcon fa-regular fa-thumbs-up" photoId=${photo.Id}></i>
+        <i class="menuIcon fa-regular fa-thumbs-up"></i>
         </span>
         </div>
         </div>`;
