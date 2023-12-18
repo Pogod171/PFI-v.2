@@ -523,7 +523,7 @@ async function renderDetailPage(photoId) {
     eraseContent();
     timeout();
     let photo = (await API.GetPhotos("?Id=" + photoId)).data[0];
-    let likes = (await API.GetPhotoLikes("?ImageId="+photoId)).data[0];
+    // let likes = (await API.GetPhotoLikes("?ImageId="+photoId)).data[0];
     console.log(photo);
     $("#content").append(`<div class="photoDetailsOwner">
     <div class="UserAvatarSmall" style="background-image:url('${photo.Owner.Avatar}')"></div>
@@ -537,7 +537,7 @@ async function renderDetailPage(photoId) {
     <div class="photoDetailsCreationDate">
         ${convertToFrenchDate(photo.Date)}
         <span class="likesSummary">
-        ${likes.length}
+        1
         <i class="menuIcon fa-regular fa-thumbs-up"></i>
         </span>
     </div>
