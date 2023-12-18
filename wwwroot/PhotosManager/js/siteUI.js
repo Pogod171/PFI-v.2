@@ -307,7 +307,7 @@ async function createPhoto(photo) { ////////////////////////////////////////////
 
 async function editPhoto(photoEdit) {
     let loggedUser = API.retrieveLoggedUser();
-    console.log(photoEdit, "Final");
+    console.log(photoEdit, "Final 1");
     if (loggedUser) {
         if (await API.UpdatePhoto(photoEdit)) { //A voir pour API.
             console.log("Photo modifié");
@@ -801,14 +801,14 @@ async function renderEditPhoto(photoId) {
             $("#content").append(`
         <br/>
         <form class="form" id="editPhoto">
-        <input type="hidden" id="idPhoto" name="idPhoto" value="${photoToEdit.Id}"/>
-        <input type="hidden" id="idUser" name="idUser" value="${photoToEdit.OwnerId}"/>
+        <input type="hidden" id="Id" name="Id" value="${photoToEdit.Id}"/>
+        <input type="hidden" id="OwnerId" name="OwnerId" value="${photoToEdit.OwnerId}"/>
             <fieldset>
                 <legend> Information </legend>
                 <input type="text" 
                  class="form-control titre" 
-                 name="Titre" 
-                 id="Titre"
+                 name="Title" 
+                 id="Title"
                  placeholder="Titre" 
                  required 
                  RequireMessage = 'Veuillez donner un titre'

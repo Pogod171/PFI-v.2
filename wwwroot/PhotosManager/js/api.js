@@ -261,6 +261,8 @@ class API {
     }
     static UpdatePhoto(photoChange) {
         API.initHttpState();
+        console.log(photoChange ,"2");
+        console.log(photoChange.Id, "id");
         return new Promise(resolve => {
             $.ajax({
                 url: serverHost + photos_API + "/modify/" + photoChange.Id,
