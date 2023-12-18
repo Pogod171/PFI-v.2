@@ -294,7 +294,8 @@ async function deletePhoto(photoId) {
 
 async function createPhoto(photo) { ///////////////////////////////////////////////////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
-    photo.Date = nowInSeconds();
+    const now = new Date();
+    photo.Date = Math.round(now.getTime() / 1000);
     console.log(photo);
     if (loggedUser) {
         if (await API.CreatePhoto(photo)) { //A voir pour API.
