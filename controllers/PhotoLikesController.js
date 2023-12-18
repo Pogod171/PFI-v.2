@@ -26,4 +26,10 @@ export default
         } else
             this.HttpContext.response.notImplemented();
     }
+
+    removeLike(id){
+        if (Authorizations.writeGranted(this.HttpContext, Authorizations.user())) {
+            super.remove(id);
+        }
+    }
 }
