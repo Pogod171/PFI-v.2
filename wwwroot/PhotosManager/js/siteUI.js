@@ -1123,7 +1123,7 @@ function getPhotos(photos, cmdName = "") {
         case "Date":
             console.log("Par date");
             photos = photos.sort(function (a, b) {
-                return a.Date - b.Date;
+                return b.Date - a.Date;
             });
 
             break;
