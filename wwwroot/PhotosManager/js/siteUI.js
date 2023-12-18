@@ -19,7 +19,10 @@ let limit;
 let HorizontalPhotosCount;
 let VerticalPhotosCount;
 let offset = 0;
-
+const nowInSeconds = () => {
+    const now = new Date();
+    return Math.round(now.getTime() / 1000);
+}
 Init_UI();
 function Init_UI() {
     getViewPortPhotosRanges();
@@ -291,7 +294,7 @@ async function deletePhoto(photoId) {
 
 async function createPhoto(photo) { ///////////////////////////////////////////////////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
-    photo.Date = 0;
+    photo.Date = nowInSeconds();
     console.log(photo);
     if (loggedUser) {
         if (await API.CreatePhoto(photo)) { //A voir pour API.
