@@ -454,7 +454,7 @@ async function renderPhotosList(filterName = "") {
         console.log(photoLikes);
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
-        if (photo.Owner.Id == API.retrieveLoggedUser().Id) {
+        if (photo.Owner.Id == API.retrieveLoggedUser().Id || API.retrieveLoggedUser().isAdmin) {
             ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" photoId="${photo.Id}"></i>
             <i class="deletePhotoCmd menuIcon fa-solid fa-trash" photoId="${photo.Id}"></i>`;
             if(photo.Shared){
