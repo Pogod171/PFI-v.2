@@ -446,11 +446,15 @@ async function renderPhotos(filterName = "") {
 async function renderPhotosList(filterName = "") {
     eraseContent();
     let photos = await API.GetPhotos();
+    let likes = await API.GetPhotoLikes();
     let contentHtml = `<div class="photosLayout">`;
     photos = getPhotos(photos.data, filterName);
     console.log(photos);
     photos.forEach(photo => {
-        let photoLikes = API.GetPhotoLikes("?ImageId="+photo.Id);
+        let photoLikes = likes.data.filter(function (item) {
+            return item.ImageId == photo.Id;
+        });
+        console.log(photoLikes);
         console.log(photoLikes);
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
@@ -473,7 +477,7 @@ async function renderPhotosList(filterName = "") {
         <div class="photoCreationDate">
         ${convertToFrenchDate(photo.Date)}
         <span class="likesSummary" photoId=${photo.Id}>
-        3
+        ${photoLikes.length}
         <i class="menuIcon fa-regular fa-thumbs-up"></i>
         </span>
         </div>
