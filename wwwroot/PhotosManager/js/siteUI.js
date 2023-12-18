@@ -841,14 +841,14 @@ function renderCreatePhoto() {//------------------------------------------------
             $("#content").append(`
             <br/>
             <form class="form" id="createPhoto">
-            <input type="hidden" id="idUser" name="idUser" value="${loggedUser.Id}"/>
+            <input type="hidden" id="OwnerId" name="OwnerId" value="${loggedUser.Id}"/>
                 <fieldset>
                     <legend> Information </legend>
                     <input type="text" 
-                     class="form-control titre" 
-                     name="Titre" 
-                     id="Titre"
-                     placeholder="Titre" 
+                     class="form-control Title" 
+                     name="Title" 
+                     id="Title"
+                     placeholder="Title" 
                      required 
                      RequireMessage = 'Veuillez donner un titre'>
 
@@ -861,11 +861,11 @@ function renderCreatePhoto() {//------------------------------------------------
                      RequireMessage = 'Veuillez donner une description'> 
                     </textarea>
                     
-                    <label for="Partage"> Partagée </label>
+                    <label for="Shared"> Partagée </label>
                     <input type="checkbox"
                       
-                     name="Partage" 
-                     id="Partage">
+                     name="Shared" 
+                     id="Shared">
                      
                 </fieldset>
 
@@ -873,7 +873,7 @@ function renderCreatePhoto() {//------------------------------------------------
                  <legend>Avatar</legend>
                  <div class='imageUploader' 
                     newImage='true' 
-                    controlId='Avatar' 
+                    controlId='Image' 
                     imageSrc='images/PhotoCloudLogo.png' 
                     waitingImage="images/Loading_icon.gif">
                  </div>                 
