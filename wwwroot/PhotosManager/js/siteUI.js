@@ -450,6 +450,8 @@ async function renderPhotosList(filterName = "") {
     photos = getPhotos(photos.data, filterName);
     console.log(photos);
     photos.forEach(photo => {
+        let photoLikes = API.GetPhotoLikes("?PhotoId="+photo.Id);
+        console.log(photoLikes);
         let ownerCommandsIcon = "";
         let ownerPhotoIcon = "";
         if (photo.Owner.Id == API.retrieveLoggedUser().Id) {
