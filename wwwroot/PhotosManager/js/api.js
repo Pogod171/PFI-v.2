@@ -69,7 +69,7 @@ class API {
             });
         });
     }
-    static register(profil) {
+    static register(profil) {/////////////////////////////////////////
         API.initHttpState();
         return new Promise(resolve => {
             $.ajax({
@@ -281,6 +281,20 @@ class API {
                 type: 'DELETE',
                 headers: API.getBearerAuthorizationToken(),
                 success: () => { resolve(true) },
+                error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
+            });
+        });
+    }
+
+    static CreateLike(idOwner, idPhoto){
+        return new Promise(resolve => {
+            $.ajax({
+                url: serverHost + photoLikes_API + "/register",   //voir pour le controller
+                type: 'POST',
+                headers: API.getBearerAuthorizationToken(),
+                contentType: 'application/json',
+                data: JSON.stringify(photo),
+                success: data => { resolve(data) },
                 error: xhr => { API.setHttpErrorState(xhr); resolve(false); }
             });
         });

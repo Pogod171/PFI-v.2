@@ -3,6 +3,7 @@ import Repository from '../models/repository.js';
 import PhotoModel from '../models/photo.js';
 import PhotoLikeModel from '../models/photoLike.js';
 import Controller from './Controller.js';
+import * as utilities from "../utilities.js";
 
 export default
     class Photos extends Controller {
@@ -28,12 +29,13 @@ export default
         if (this.repository != null) {
             photo.Date = utilities.nowInSeconds();//à voir pour mettre la date
             let newPhoto = this.repository.add(photo);
+            console.log(newPhoto);
             if (this.repository.model.state.isValid) {
                 this.HttpContext.response.created(newPhoto);
             } else {
-                 (this.repository.model.state.inConflict)
+                if(this.repository.model.state.inConflict)
                     this.HttpContext.response.conflict(this.repository.model.state.errors);
-                
+                else
                     this.HttpContext.response.badRequest(this.repository.model.state.errors);
             }
         } else

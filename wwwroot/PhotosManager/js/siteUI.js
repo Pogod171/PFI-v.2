@@ -1,3 +1,4 @@
+//import * as utilities from "../utilities.js";
 
 //<span class="cmdIcon fa-solid fa-ellipsis-vertical"></span>
 let contentScrollPosition = 0;
@@ -291,6 +292,7 @@ async function deletePhoto(photoId) {
 async function createPhoto(photo) { ///////////////////////////////////////////////////////////////////////////////////////////
     let loggedUser = API.retrieveLoggedUser();
     console.log(photo);
+   // photo.Date = utilities.nowInSeconds();
     if (loggedUser) {
         if (await API.CreatePhoto(photo)) { //A voir pour API.
             console.log("Photo enregistrer");
@@ -300,7 +302,7 @@ async function createPhoto(photo) { ////////////////////////////////////////////
     }
 }
 
-async function editPhoto(photo) { 
+async function editPhoto(photo) {
     let loggedUser = API.retrieveLoggedUser();
     console.log(photo);
     if (loggedUser) {
@@ -322,6 +324,19 @@ async function deleteProfil() {
             renderError("Un problème est survenu.");
     }
 }
+
+function createLike(idPhoto){
+    let loggedUser = API.retrieveLoggedUser();
+    let likeUser = [loggedUser.Id, idPhoto];
+    if(loggedUser){
+        CreateLike(likeUser);
+    }
+}
+
+function removeLike(idPhoto){
+    
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// Views rendering
 function showWaitingGif() {
@@ -402,7 +417,7 @@ function renderAbout() {
                     d'interface utilisateur monopage réactive.
                 </p>
                 <p>
-                    Auteur: vos noms d'équipiers
+                    Auteur: Xavier Tassy et Francis Picard
                 </p>
                 <p>
                     Collège Lionel-Groulx, automne 2023
@@ -450,13 +465,22 @@ async function renderPhotosList(filterName = "") {
         ${convertToFrenchDate(photo.Date)}
         <span class="likesSummary">
         3
-        <i class="menuIcon fa-regular fa-thumbs-up"></i>
+        <i id="likes" class="menuIcon fa-regular fa-thumbs-up"></i>
         </span>
         </div>
         </div>`;
     });
     contentHtml += `</div>`;
     $("#content").append(contentHtml);
+
+    $("#likes").on("click", function() {
+        let photoId = $(this).attr("photoId");
+        createLike(photoId);
+    });
+
+    $("likes").on("onmousemove", function(){
+        //Afficher les nom de ceux qui ont liker
+    });
 
     $(".editPhotoCmd").on("click", function () {/////////////////////////////////////////////////////////////////////////////
         let photoId = $(this).attr("photoId");
@@ -762,7 +786,7 @@ async function renderEditPhoto(photoId) {// a voir pour async//-----------------
     let loggedUser = API.retrieveLoggedUser();
     if (loggedUser) {
         if (!API.error) {
-            let photoToEdit = (await API.GetPhotosById(photoId));//avoir la photo lié à son id
+            let photoToEdit = (await API.GetPhotosById(photoId));//regarder aussi si c'est le owner id
             let isChecked = photoToEdit.Shared
             console.log(photoToEdit);
             eraseContent();
@@ -865,7 +889,8 @@ function renderCreatePhoto() {//------------------------------------------------
                     <input type="checkbox"
                       
                      name="Shared" 
-                     id="Shared">
+                     id="Shared"
+                     >
                      
                 </fieldset>
 
@@ -883,14 +908,20 @@ function renderCreatePhoto() {//------------------------------------------------
             <div class="cancel">
                 <button class="form-control btn-secondary" id="abortCreatePhoto">Annuler</button>
             </div>      
-        `);//////////////////Rendu ici 
+        `);//////////////////Rendu ici Voir pour rendre la date
             initFormValidation();
             initImageUploaders();
+
             $('#abortCreatePhoto').on('click', renderPhotos);
             $('#createPhoto').on("submit", function (event) {
                 let photo = getFormData($('#createPhoto'));
+                if(photo.Shared == 'on') 
+                    photo.Shared = true;
+                 else 
+                    photo.Shared = false;
+                
                 event.preventDefault();
-                //console.log(photo);
+                console.log(photo);
                 showWaitingGif();
                 createPhoto(photo);
             });
