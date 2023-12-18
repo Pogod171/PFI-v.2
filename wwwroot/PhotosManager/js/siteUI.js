@@ -305,11 +305,11 @@ async function createPhoto(photo) { ////////////////////////////////////////////
     }
 }
 
-async function editPhoto(photo) {
+async function editPhoto(photoEdit) {
     let loggedUser = API.retrieveLoggedUser();
-    console.log(photo);
+    console.log(photoEdit, "Final");
     if (loggedUser) {
-        if (await API.UpdatePhoto(photo)) { //A voir pour API.
+        if (await API.UpdatePhoto(photoEdit)) { //A voir pour API.
             console.log("Photo modifié");
             renderPhotos();
         } else
@@ -794,15 +794,15 @@ async function renderEditPhoto(photoId) {
         if (!API.error) {
             let photoToEdit = (await API.GetPhotosById(photoId));
             let isChecked = photoToEdit.Shared;
-            //photoToEdit.OwnerId = loggedUser.Id;
-            console.log(photoToEdit);
+            console.log(photoToEdit,"Origine");
             eraseContent();
             UpdateHeader("Modification de Photo", "Modification photo");
             $("#newPhotoCmd").hide();
             $("#content").append(`
         <br/>
         <form class="form" id="editPhoto">
-        
+        <input type="hidden" id="idPhoto" name="idPhoto" value="${photoToEdit.Id}"/>
+        <input type="hidden" id="idUser" name="idUser" value="${photoToEdit.OwnerId}"/>
             <fieldset>
                 <legend> Information </legend>
                 <input type="text" 
@@ -857,12 +857,13 @@ async function renderEditPhoto(photoId) {
                  else 
                     photo.Shared = false;
                 event.preventDefault();
+                console.log(photo.Id, "1");
+                console.log(photo.Shared, "2");
                 console.log(photo.Image);
                 showWaitingGif();
                 editPhoto(photo);
             });
         }
-
     }
 }
 

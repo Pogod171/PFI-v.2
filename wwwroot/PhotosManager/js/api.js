@@ -259,15 +259,15 @@ class API {
             });
         });
     }
-    static UpdatePhoto(photo) {
+    static UpdatePhoto(photoChange) {
         API.initHttpState();
         return new Promise(resolve => {
             $.ajax({
-                url: serverHost + photos_API + "/modify/" + photo.Id,
+                url: serverHost + photos_API + "/modify/" + photoChange.Id,
                 type: 'PUT',
                 headers: API.getBearerAuthorizationToken(),
                 contentType: 'application/json',
-                data: JSON.stringify(photo),
+                data: JSON.stringify(photoChange),
                 success: (photo) => {
                     resolve(photo);
                 },
