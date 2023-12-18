@@ -453,7 +453,9 @@ async function renderPhotosList(filterName = "") {
         if (photo.Owner.Id == API.retrieveLoggedUser().Id) {
             ownerCommandsIcon = `<i class="editPhotoCmd menuIcon fa-solid fa-pencil" photoId="${photo.Id}"></i>
             <i class="deletePhotoCmd menuIcon fa-solid fa-trash" photoId="${photo.Id}"></i>`;
-            ownerPhotoIcon = `<div class="UserAvatarSmall" style="background-image: url('images/shared.png')"></div>`;
+            if(photo.Shared){
+                ownerPhotoIcon = `<div class="UserAvatarSmall" style="background-image: url('images/shared.png')"></div>`;
+            }
         }
         contentHtml += `<div class="photoLayout">
         <div class="photoTitleContainer">
@@ -1123,13 +1125,13 @@ function getFormData($form) {
     return jsonObject;
 }
 
-function getPhotos(photos, cmdName = "") {
+function getPhotos(photos, cmdName = "Date") {
     let loggedUser = API.retrieveLoggedUser();
     switch (cmdName) {
         case "Date":
             console.log("Par date");
             photos = photos.sort(function (a, b) {
-                return a.Date - b.Date;
+                return b.Date - a.Date;
             });
 
             break;
@@ -1158,6 +1160,11 @@ function getPhotos(photos, cmdName = "") {
             break;
         default:
             break;
+    }
+    if(cmdName != "Owned"){
+        photos = photos.filter(function(photo) {
+            return photo.Shared == true; 
+        });
     }
     return photos;
 
