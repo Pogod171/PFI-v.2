@@ -486,11 +486,13 @@ async function renderPhotosList(filterName = "") {
     contentHtml += `</div>`;
     $("#content").append(contentHtml);
 
-    $(".likesSummary").on("click", function() {
+    $(".likesSummary").on("click", function() {// rajouter un if pour voir si des likes
         let photoId = $(this).attr("photoId");
-        console.log("Like créer 1");
-        console.log(photoId);
-        createLike(photoId);
+        let loggedUser = API.retrieveLoggedUser();
+         if(photoLikes.OwnerId != loggedUser.Id)
+            createLike(photoId);
+         else
+          removeLike(photoId);
     });
 
     $(".likesSummary").on("onmousemove", function(){
